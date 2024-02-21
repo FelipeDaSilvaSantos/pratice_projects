@@ -92,6 +92,7 @@ function createCardElement(card, htmlCard){
     createCardFace(BACK, card, htmlCard)
 }
 
+// the card receives both(front, back) but the css covers the front
 function createCardFace(face, card, htmlCard){
     let cardElements = document.createElement("div")
     cardElements.classList.add(face)
@@ -106,10 +107,11 @@ function createCardFace(face, card, htmlCard){
     }else{
         cardElements.iinerHTML = "?"
     }
-    htmlCard.appendChild(cardElements) //a div pai com class=card recebe como filho a div se é FRONT ou BACK
+    htmlCard.appendChild(cardElements)
 
 }
 
+// when clicked, reveals the 'FRONT'
 function flipCard(){
     this.classList.add('flip')
 }
