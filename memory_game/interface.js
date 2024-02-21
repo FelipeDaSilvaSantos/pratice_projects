@@ -3,75 +3,17 @@ const FRONT = "card_front"
 const BACK = "card_back"
 const ICON = "icon"
 
-let languages = [
-    'bootstrap', 
-    'css', 
-    'electron', 
-    'firebase', 
-    'html', 
-    'javascript', 
-    'jquery', 
-    'mongo', 
-    'node', 
-    'react', 
-]
-
-let cards = null
-
 startGame()
 
 function startGame(){
-    let cards = createCardsFromTechs(languages)
-    shuffledCards(cards)
-    createCardsForTheBoard(cards)
-}
-
-
-//takes the "languages array" and transforms the elements into a new "cards array"
-function createCardsFromTechs(languages){
-    let cards = []
-
-    languages.forEach(lang => {
-        cards.push(createDuplicateOfCard(lang))
-    })
-
-    return cards.flatMap(pair => pair)
-}
-
-function createDuplicateOfCard(lang){
-    return [{
-        id: createRandomNumber(lang),
-        icon: lang,
-        flipped: false
-    },{
-        id: createRandomNumber(lang),
-        icon: lang,
-        flipped: false
-    }]
-}
-
-function createRandomNumber(lang){
-    return lang + "_" + parseInt(Math.random() * 1000)
-}
-
-
-function shuffledCards(cards){
-    let currentIndex = cards.length //20
-    let randomIndex = 0
-    while (currentIndex != 0) {
-        randomIndex = Math.floor(Math.random() * currentIndex)
- 
-        currentIndex--
-
-        [cards[currentIndex], cards[randomIndex]] = [cards[randomIndex], cards[currentIndex]]
-    }
+    createCardsForTheBoard(game.createCardsFromTechs())
 }
 
 // HTML da classe "card"
-function createCardsForTheBoard(cards){
+function createCardsForTheBoard(){
     let board = document.getElementById("gameBoard")
 
-    cards.forEach(card => {
+    game.cards.forEach(card => {
 
         let htmlCard = document.createElement("div")
         htmlCard.id = card.id
@@ -105,7 +47,7 @@ function createCardFace(face, card, htmlCard){
     }else if(face === BACK){
         cardElements.innerHTML = "&lt/&gt"
     }else{
-        cardElements.iinerHTML = "?"
+        cardElements.iinerHTML = "#ERROR#"
     }
     htmlCard.appendChild(cardElements)
 
