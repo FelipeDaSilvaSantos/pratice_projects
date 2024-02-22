@@ -58,7 +58,6 @@ body{
     color: #101c2c;
     background-color: #dbdf04;
     font-size: 30px;
-    /* display: none; */
 }
 
 #gameOver{
@@ -89,3 +88,4 @@ body{
     background-color: #101c2c;
     color: yellow;
 }
+
