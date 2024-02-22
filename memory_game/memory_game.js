@@ -1,62 +1,96 @@
-const game = {
+let game = {
 
-    languages:  [
-        'bootstrap', 
-        'css', 
-        'electron', 
-        'firebase', 
-        'html', 
-        'javascript', 
-        'jquery', 
-        'mongo', 
-        'node', 
-        'react', 
-    ],
+    lockMode: false,
+    firstCard: null,
+    secondCard: null,
+
+    setCard: function (id) {
+
+        let card = this.cards.filter(card=>card.id===id)[0]
+        
+
+        if(card.flipped || this.lockMode){
+            return false
+        }
+
+        if(!this.firstCard){
+            this.firstCard = card
+            return true
+        }else{
+            this.secondCard = card
+            this.lockMode = true
+            return true
+        }
+
+
+    },
+
+    checkMatch: function (){
+        return this.firstCard.icon === this.secondCard.icon
+    },
+
+    clearCards: function(){
+        this.firstCard = null
+        this.secondCard = null
+        this.lockMode = false
+    },
+
+
+
+    techs :  ['bootstrap', 
+    'css', 
+    'electron', 
+    'firebase', 
+    'html', 
+    'javascript', 
+    'jquery', 
+    'mongo', 
+    'node', 
+    'react'],
 
     cards: null,
 
-    //takes the "languages array" and transforms the elements into a new "cards array"
-    createCardsFromTechs: function (){
-    this.cards = []
+    createCardsFromTechs: function(){
 
-    this.languages.forEach(lang => {
-        this.cards.push(this.createDuplicateOfCard(lang))
-    })
-
-    this.cards = this.cards.flatMap(pair => pair)
-    cards = this.shuffledCards()
-    return this.cards
+        this.cards = [];
+        
+    
+        this.techs.forEach((tech) => {
+            this.cards.push(this.createPairFromTech(tech))
+        })
+    
+        this.cards = this.cards.flatMap(pair => pair)
+        this.shuffleCards()
+        return this.cards
     },
-
-    createDuplicateOfCard: function (lang){
+    
+    createPairFromTech: function (tech){
+    
         return [{
-            id: this.createRandomNumber(lang),
-            icon: lang,
-            flipped: false
+            id: this.createIdWithTech(tech),
+            icon: tech,
+            flipped: false,
         },{
-            id: this.createRandomNumber(lang),
-            icon: lang,
-            flipped: false
+            id: this.createIdWithTech(tech),
+            icon: tech,
+            flipped: false,
         }]
     },
-
-    createRandomNumber: function (lang){
-        return lang + "_" + parseInt(Math.random() * 1000)
+    
+    createIdWithTech: function (tech){
+        return tech + parseInt(Math.random() * 1000)
     },
 
-    shuffledCards: function (){
-        let currentIndex = this.cards.length //20
-        let randomIndex = 0
-        while (currentIndex != 0) {
-            randomIndex = Math.floor(Math.random() * currentIndex)
-     
-            currentIndex--
+    shuffleCards: function (cards){
+        let currentIndex = this.cards.length;
+        let randomIndex = 0;
     
-            [this.cards[currentIndex], this.cards[randomIndex]] = [this.cards[randomIndex], this.cards[currentIndex]]
+        while(currentIndex !== 0){
+    
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex--;
+    
+            [this.cards[randomIndex], this.cards[currentIndex]] = [this.cards[currentIndex], this.cards[randomIndex]]
         }
-    },
-
-
-
-    
+    }
 }
