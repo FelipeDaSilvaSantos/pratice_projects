@@ -6,54 +6,75 @@ const ICON = "icon"
 startGame()
 
 function startGame(){
-    createCardsForTheBoard(game.createCardsFromTechs())
+    initializeCards(game.createCardsFromTechs())
 }
 
 // HTML da classe "card"
-function createCardsForTheBoard(){
-    let board = document.getElementById("gameBoard")
-
+function initializeCards(){
+    let gameBoard = document.getElementById("gameBoard")
+    
     game.cards.forEach(card => {
 
-        let htmlCard = document.createElement("div")
-        htmlCard.id = card.id
-        htmlCard.classList.add(CARD)
-        htmlCard.dataset.icon = card.icon
-        
-        createCardElement(card, htmlCard)
+        let cardElement = document.createElement('div')
+        cardElement.id = card.id
+        cardElement.classList.add(CARD)
+        cardElement.dataset.icon = card.icon
 
-        htmlCard.addEventListener('click', flipCard)
-        board.appendChild(htmlCard)
+        createCardContent(card, cardElement)
 
+
+        cardElement.addEventListener('click', flipCard)
+        gameBoard.appendChild(cardElement)
     })
+
+
 }
 
-
-function createCardElement(card, htmlCard){
-    createCardFace(FRONT, card, htmlCard)
-    createCardFace(BACK, card, htmlCard)
+function createCardContent(card, cardElement){
+    createCardFace(FRONT, card, cardElement)
+    createCardFace(BACK, card, cardElement)
 }
 
-// the card receives both(front, back) but the css covers the front
-function createCardFace(face, card, htmlCard){
-    let cardElements = document.createElement("div")
-    cardElements.classList.add(face)
+function createCardFace(face, card, element){
+    let cardElementFace = document.createElement('div')
+    cardElementFace.classList.add(face)
+
     if(face === FRONT){
-        let cardFace = document.createElement("img")
-        cardFace.classList.add(ICON)
-        cardFace.src = "images_game/" + card.icon + ".png"
-        cardElements.appendChild(cardFace)
-        
-    }else if(face === BACK){
-        cardElements.innerHTML = "&lt/&gt"
+        let iconElement = document.createElement('img')
+        iconElement.classList.add(ICON)
+        iconElement.src = "../memory_game/images_game/" + card.icon + ".png"
+        cardElementFace.appendChild(iconElement)
     }else{
-        cardElements.iinerHTML = "#ERROR#"
+        cardElementFace.innerHTML = "&lt/&gt"
     }
-    htmlCard.appendChild(cardElements)
-
+    element.appendChild(cardElementFace)
 }
 
-// when clicked, reveals the 'FRONT'
+
 function flipCard(){
-    this.classList.add('flip')
+
+    if(game.setCard(this.id)){
+
+        this.classList.add("flip")
+        if (game.checkMatch()){
+            game.clearCards()
+        }else{
+            setTimeout(() => {
+                let firstCardView = document.getElementById(game.firstCard.id)
+                let secondCardView = document.getElementById(game.secondCard.id)
+
+                firstCardView.classList.remove('flip')
+                secondCardView.classList.remove('flip')
+                game.clearCards();
+            }, 800);
+            
+
+
+
+        }
+    }
+
+
+
+    
 }
